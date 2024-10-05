@@ -1,0 +1,36 @@
+name: CI Pipeline
+
+# Déclenchement du pipeline à chaque push ou pull request sur la branche 'main'
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Étape 1: Cloner le code du dépôt
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # Étape 2: Installer Python 3.12
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.12'
+
+      # Étape 3: Installer Poetry et les dépendances
+      - name: Install Poetry
+        run: |
+          curl -sSL https://install.python-poetry.org | python3 -
+          poetry install
+
+      # Étape 4: Exécuter les tests unitaires avec pytest
+      - name: Run tests
+        run: |
+          poetry run pytest
